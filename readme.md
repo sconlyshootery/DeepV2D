@@ -9,18 +9,18 @@ International Conference on Learning Representations (ICLR) 2020<br/>
 
 
 ## Requirements
-Our code was tested using Tensorflow 1.12.0 and Python 3. To use the code, you need to first install the following python packages:
+Our code was tested using Tensorflow 1.15.0 and Python 3.6 To use the code, you need to first install the following python packages:
 
 First create a clean virtualenv 
 
   ```Shell
-  virtualenv --no-site-packages -p python3 deepv2d_env
-  source deepv2d_env/bin/activate
+  conda create -n deepv2d python=3.6
+  conda activate deepv2d
   ```
 
   ```Shell
-  pip install tensorflow-gpu==1.12.0
-  pip install h5py
+  pip install tensorflow-gpu==1.15.0 #for cuda 10.0+
+  pip install matplotlib
   pip install easydict
   pip install scipy
   pip install opencv-python
