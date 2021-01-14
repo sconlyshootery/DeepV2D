@@ -1,5 +1,6 @@
 import sys
-sys.path.append('deepv2d')
+sys.path.append('.')
+sys.path.append('..')
 
 import tensorflow as tf
 import numpy as np
@@ -12,8 +13,8 @@ import time
 import argparse
 import random
 
-from data_stream.nyuv2 import NYUv2
-from data_stream.kitti import KittiRaw
+from deepv2d.data_stream.nyuv2 import NYUv2
+from deepv2d.data_stream.kitti import KittiRaw
 
 
 def to_tfrecord(data_blob):
@@ -85,9 +86,9 @@ def main_kitti(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', help='kitti or nyu')
-    parser.add_argument('--dataset_dir', help='path to dataset directory')
-    parser.add_argument('--records_file', help='path to dataset directory')
+    parser.add_argument('--dataset', help='kitti or nyu', default='kitti')
+    parser.add_argument('--dataset_dir', help='path to dataset directory', default='/media/sconly/harddisk/data/kitti/kitti_raw/rawdata')
+    parser.add_argument('--records_file', help='path to dataset directory', default='kitti_train.tfrecords')
     args = parser.parse_args()
 
     if args.dataset == 'nyu':

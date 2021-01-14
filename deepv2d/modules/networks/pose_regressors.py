@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 slim = tf.contrib.slim
 
-from special_ops.operators import clip_nan_gradients
+from deepv2d.special_ops.operators import clip_nan_gradients
 
 """
 Euler rotation code taken from SfMLearner: https://github.com/tinghuiz/SfMLearner

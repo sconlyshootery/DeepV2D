@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
-from data_stream import kitti_utils
-from data_stream import util
+from deepv2d.data_stream import kitti_utils
+from deepv2d.data_stream import util
 
 import csv
 import cv2
@@ -79,7 +79,7 @@ class KittiRaw(object):
 
 
     def _fetch_image_path(self, drive, index):
-        image_path = os.path.join(drive[:10], drive+'_sync', 'image_02', 'data', '%010d.png'%index)
+        image_path = os.path.join(drive[:10], drive+'_sync', 'image_02', 'data', '%010d.jpg'%index)
         return os.path.join(self.dataset_path, image_path)
 
     def _fetch_velo_path(self, drive, index):
@@ -98,7 +98,7 @@ class KittiRaw(object):
         for test_frame in test_list:
             comps = test_frame.split('/')
             drive = comps[1].replace('_sync', '')
-            frame = int(comps[4].replace('.png', ''))
+            frame = int(comps[4].replace('.jpg', ''))
 
             if drive not in self.poses:
                 trajectory = self._read_oxts_data(drive)
@@ -247,9 +247,9 @@ class KittiRaw(object):
 
     def _collect_scenes(self):
         if self.mode == 'train':
-            sequence_list = 'data/kitti/train_scenes_eigen.txt'
+            sequence_list = '/home/sconly/Documents/code/DeepV2D/data/kitti/train_scenes_eigen.txt'
         if self.mode == 'test':
-            sequence_list = 'data/kitti/test_scenes_eigen.txt'
+            sequence_list = '/home/sconly/Documents/code/DeepV2D/data/kitti/test_scenes_eigen.txt'
 
         with open(sequence_list) as f:
             reader = csv.reader(f)

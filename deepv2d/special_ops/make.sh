@@ -2,7 +2,7 @@ TF_CFLAGS=( $(python -c 'import tensorflow as tf; print(" ".join(tf.sysconfig.ge
 TF_LFLAGS=( $(python -c 'import tensorflow as tf; print(" ".join(tf.sysconfig.get_link_flags()))') )
 
 
-CUDALIB=/usr/local/cuda-10.2/lib64/
+CUDALIB=/home/sconly/software/conda/envs/tensorflow1.15+cuda10/lib/
 
 nvcc -std=c++11 -c -o backproject_op_gpu.cu.o backproject_op_gpu.cu.cc \
   ${TF_CFLAGS[@]} -D GOOGLE_CUDA=1 -x cu -Xcompiler -fPIC

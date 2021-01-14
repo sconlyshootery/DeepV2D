@@ -2,7 +2,7 @@ import tensorflow as tf
 import os.path as osp
 
 from tensorflow.python.framework import ops
-from utils.bilinear_sampler import *
+from deepv2d.utils.bilinear_sampler import *
 
 filename = osp.join(osp.dirname(__file__), 'backproject.so')
 if osp.isfile(filename):

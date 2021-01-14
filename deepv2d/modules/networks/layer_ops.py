@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 slim = tf.contrib.slim
 
-from core.config import cfg
+from deepv2d.core.config import cfg
 
 
 def bnrelu(x):

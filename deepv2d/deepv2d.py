@@ -2,18 +2,21 @@ import tensorflow as tf
 import numpy as np
 import time
 import cv2
-import vis
+
 from scipy import interpolate
 import matplotlib.pyplot as plt
 
-from modules.depth import DepthNetwork
-from modules.motion import MotionNetwork
+from deepv2d.modules.depth import DepthNetwork
+from deepv2d.modules.motion import MotionNetwork
+from deepv2d.vis import visualize_prediction, create_image_depth_figure
+from deepv2d.utils import flow_viz
+from deepv2d.fcrn import fcrn
+from deepv2d.geometry.intrinsics import *
+from deepv2d.geometry.transformation import *
+from deepv2d.geometry import projective_ops
+import warnings
 
-from utils import flow_viz
-from fcrn import fcrn
-from geometry.intrinsics import *
-from geometry.transformation import *
-from geometry import projective_ops
+warnings.filterwarnings('ignore')
 
 
 def fill_depth(depth):
@@ -77,7 +80,13 @@ class DeepV2D:
         if self.use_fcrn:
             self._build_fcrn_graph()
 
-        self.saver = tf.train.Saver(tf.model_variables())
+        # variables = tf.model_variables()
+        # variables_to_resotre = [v for v in variables if not 'BatchNorm' in v.name]
+        # self.saver = tf.train.Saver(variables_to_resotre)
+
+        # self.saver = tf.train.Saver(tf.model_variables())
+
+        self.saver = tf.train.Saver(tf.global_variables())
 
 
     def set_session(self, sess):
@@ -91,7 +100,7 @@ class DeepV2D:
                 fcrn_vars[var.name.replace('FCRN/', '').replace(':0', '')] = var
 
             fcrn_saver = tf.train.Saver(fcrn_vars)
-            fcrn_saver.restore(sess, 'models/NYU_FCRN.ckpt')
+            fcrn_saver.restore(sess, '/home/sconly/Documents/code/DeepV2D/models/NYU_FCRN.ckpt')
 
 
     def _create_placeholders(self):
@@ -422,7 +431,7 @@ class DeepV2D:
         keyframe_image = self.images[0]
         keyframe_depth = self.depths[0]
 
-        image_depth = vis.create_image_depth_figure(keyframe_image, keyframe_depth)
+        image_depth = create_image_depth_figure(keyframe_image, keyframe_depth)
         cv2.imwrite('depth.png', image_depth[:, image_depth.shape[1]//2:])
         cv2.imshow('image_depth', image_depth/255.0)
         
@@ -433,7 +442,7 @@ class DeepV2D:
         point_cloud, point_colors = self.sess.run(self.outputs['point_cloud'], feed_dict=feed_dict)
 
         print("Press q to exit")
-        vis.visualize_prediction(point_cloud, point_colors, self.poses)
+        visualize_prediction(point_cloud, point_colors, self.poses)
 
 
     def __call__(self, images, intrinsics=None, iters=5, viz=False):

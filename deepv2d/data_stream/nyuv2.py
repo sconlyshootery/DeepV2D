@@ -7,7 +7,7 @@ import glob
 import os.path as osp
 
 
-from geometry.transformation import *
+from ..geometry.transformation import *
 import cv2
 import tensorflow as tf
 

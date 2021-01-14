@@ -5,9 +5,9 @@ slim = tf.contrib.slim
 from .networks import hg
 from .networks.layer_ops import *
 
-from geometry.transformation import *
-from geometry.intrinsics import *
-from special_ops import operators
+from deepv2d.geometry.transformation import *
+from deepv2d.geometry.intrinsics import *
+from deepv2d.special_ops import operators
 
 def add_depth_summaries(gt, pr):
     gt = tf.reshape(gt, [-1])

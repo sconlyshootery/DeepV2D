@@ -12,8 +12,11 @@ import time
 import glob
 import random
 
-from core import config
-from deepv2d import DeepV2D
+from deepv2d.core import config
+from deepv2d.deepv2d import DeepV2D
+import warnings
+
+warnings.filterwarnings('ignore')
 
 
 def load_test_sequence(path, n_frames=-1):
@@ -40,13 +43,13 @@ def main(args):
 
     if args.cfg is None:
         if 'nyu' in args.model:
-            args.cfg = 'cfgs/nyu.yaml'
+            args.cfg = '/home/sconly/Documents/code/DeepV2D/cfgs/nyu.yaml'
         elif 'scannet' in args.model:
-            args.cfg = 'cfgs/scannet.yaml'
+            args.cfg = '/home/sconly/Documents/code/DeepV2D/cfgs/scannet.yaml'
         elif 'kitti' in args.model:
-            args.cfg = 'cfgs/kitti.yaml'
+            args.cfg = '/home/sconly/Documents/code/DeepV2D/cfgs/kitti.yaml'
         else:
-            args.cfg = 'cfgs/nyu.yaml'
+            args.cfg = '/home/sconly/Documents/code/DeepV2D/cfgs/nyu.yaml'
         
     cfg = config.cfg_from_file(args.cfg)
     is_calibrated = not args.uncalibrated
@@ -54,7 +57,19 @@ def main(args):
     # build the DeepV2D graph
     deepv2d = DeepV2D(cfg, args.model, use_fcrn=args.fcrn, is_calibrated=is_calibrated, mode=args.mode)
 
-    with tf.Session() as sess:
+    gpu_no = '0' # or '1'
+    os.environ["CUDA_VISIBLE_DEVICES"] = gpu_no
+
+    # 定义TensorFlow配置
+    conf = tf.ConfigProto()
+
+    # 配置GPU内存分配方式，按需增长，很关键
+    conf.gpu_options.allow_growth = True
+
+    # 配置可使用的显存比例
+    # conf.gpu_options.per_process_gpu_memory_fraction = 0.8
+
+    with tf.Session(config = conf) as sess:
         deepv2d.set_session(sess)
 
         # call deepv2d on a video sequence
@@ -70,13 +85,13 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg', help='config file used to train the model')
-    parser.add_argument('--model', default='models/nyu.ckpt', help='path to model checkpoint')
+    parser.add_argument('--model', default='/home/sconly/Documents/code/DeepV2D/models/kitti.ckpt', help='path to model checkpoint')
     
     parser.add_argument('--mode', default='keyframe', help='keyframe or global pose optimization')
-    parser.add_argument('--fcrn', action="store_true", help='use fcrn for initialization')
+    parser.add_argument('--fcrn', action="store_true", help='use fcrn for initialization', default=False)
     parser.add_argument('--n_iters', type=int, default=5, help='number of iterations to use')
-    parser.add_argument('--uncalibrated', action="store_true", help='use fcrn for initialization')
-    parser.add_argument('--sequence', help='path to sequence folder')
+    parser.add_argument('--uncalibrated', action="store_true", help='use fcrn for initialization', default=False)
+    parser.add_argument('--sequence', help='path to sequence folder', default='/home/sconly/Documents/code/DeepV2D/data/demos/kitti_0')
     args = parser.parse_args()
 
     main(args)

@@ -5,9 +5,9 @@ slim = tf.contrib.slim
 from .networks.pose_regressors import pose_regressor_factory
 from .networks.layer_ops import *
 
-from geometry.transformation import *
-from geometry.intrinsics import *
-from utils.bilinear_sampler import bilinear_sampler
+from deepv2d.geometry.transformation import *
+from deepv2d.geometry.intrinsics import *
+from deepv2d.utils.bilinear_sampler import bilinear_sampler
 
 EPS = 1e-5
 MIN_DEPTH = 0.1
